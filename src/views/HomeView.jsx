@@ -38,7 +38,7 @@ export function HomeView() {
         <span>{wallet}</span>
         <span> Р</span>
       </div>
-      <PieChart spendsCount={spendsCount}/>
+      <PieChart spendsCount={spendsCount} />
       <div className="app-footer">
         {/* <NavLink className='incomes' to='/'>Доходы</NavLink>
         <NavLink className='incomes' to='/'>Расходы</NavLink> */}
