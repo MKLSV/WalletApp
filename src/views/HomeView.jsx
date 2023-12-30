@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { PieChart } from "../components/PieChart";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { storageService } from "../services/async-storage.service";
 import { Loader } from "../components/Loader";
 
@@ -24,26 +24,35 @@ export function HomeView() {
       setIncomesCount(parseInt(incomesWallet))
       setLoader(false)
     })
-  },[])
+  }, [])
 
   useEffect(() => {
     setWallet(incomesCount)
-  },[incomesCount,spendsCount])
+  }, [incomesCount, spendsCount])
 
   return (
     <div className="home-view">
-      {loader ? <Loader/> : ''}
-      <div className="wallet">
-        <span>Кошелек:</span>
-        <span>{wallet}</span>
-        <span> Р</span>
+      {loader ? <Loader /> : ''}
+      <div className="app-header">
+        {/* <button className="incomes" onClick={() => navigate('/incomes')}>Доходы</button>
+        <button className="spends" onClick={() => navigate('/spends')}>Расходы</button> */}
+        <NavLink className='incomes' to='/'>Доходы</NavLink>
+        <NavLink className='spends' to='/'>Расходы</NavLink>
       </div>
       <PieChart spendsCount={spendsCount} />
-      <div className="app-footer">
-        {/* <NavLink className='incomes' to='/'>Доходы</NavLink>
-        <NavLink className='incomes' to='/'>Расходы</NavLink> */}
-        <button className="incomes" onClick={() => navigate('/incomes')}>Доходы</button>
-        <button className="spends" onClick={() => navigate('/spends')}>Расходы</button>
+      <div className="wallet-container">
+        <span>Кошелек</span>
+        <div className="wallet">
+          <button className="add-income">+</button>
+          <span>{wallet} P</span>
+          <button className="add-spend">+</button>
+        </div>
+        <div className="wallet-bar">
+          <div className="income-bar"></div>
+          <div className="middle-bar">
+          </div>
+          <div className="spend-bar"></div>
+        </div>
       </div>
     </div>
   );

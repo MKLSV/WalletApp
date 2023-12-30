@@ -1,31 +1,52 @@
 import React from 'react';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
+import dollar from '../assets/dollar.png'
 
 ChartJS.register(ArcElement, Tooltip, Legend);
-ChartJS.defaults.font.size = 50;
+// // ChartJS.defaults.font.size = 50;
 
-export function PieChart({spendsCount}) {
+export function PieChart({ spendsCount }) {
   const data = {
-    labels: ['Доходы', 'Расходы'],
+    // labels: ['Доходы', 'Расходы'],
     datasets: [
       {
-        data: [10000, spendsCount],
+        data: [10000, 5000],
         backgroundColor: [
-            'rgba(7, 237, 114, 0.714)',
-            'rgba(255, 99, 132, 0.7)',
+          '#ff5c61',
+          '#0cc9cb',
         ],
         borderColor: [
-            'rgba(7, 237, 114, 1)',
-            'rgba(255, 99, 132, 1)',
+          '#ff5c61',
+          '#0cc9cb',
         ],
-        color: "#ffffff",
-        borderWidth: 2,
+        hoverBackgroundColor: ['darkred', 'darkblue', 'darkyellow'],
+        shadowColor: 'rgba(0, 0, 0, 0.4)',
+        shadowBlur: 110,
+        shadowOffsetX: 115,
+        shadowOffsetY: 115,
+        hoverOffset: 4
       },
     ],
   };
 
 
 
-  return <Pie data={data} className='chart' />;
+
+  return (
+    <div className="chart-container">
+      <div className="chart">
+        <div className="shadow"></div>
+        <div className="dollar-box">
+          <div className="dollar-container">
+            <div className="dollar">
+              <img src={dollar} />
+            </div>
+          </div>
+        </div>
+        <Pie data={data} className='pie-chart' />
+      </div>
+    </div>
+
+  )
 }
