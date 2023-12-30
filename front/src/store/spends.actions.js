@@ -1,7 +1,7 @@
 
 import { store } from './store.js'
 import { dbService } from "../services/db.service.js";
-import { ADD_INCOME, SET_INCOMES, UPDATE_INCOME } from './incomes.reducer.js';
+import { ADD_SPEND, SET_SPENDS } from './spends.reducer.js';
 
 // Action Creators:SET_STORIES
 // export function getActionRemoveStory(storyId) {
@@ -10,14 +10,30 @@ import { ADD_INCOME, SET_INCOMES, UPDATE_INCOME } from './incomes.reducer.js';
 //         storyId
 //     }
 // }
-const DB_NAME = 'Incomes'
 
-export async function loadIncomes() {
+export function getActionAddSpend(spend) {
+    return {
+        type: ADD_SPEND,
+        spend
+    }
+}
+
+
+const DB_NAME = 'Spends'
+
+// export function getActionUpdateStory(story) {
+//     return {
+//         type: UPDATE_INCOME,
+//         story
+//     }
+// }
+
+export async function loadSpends() {
     try {
-        const incomes = await dbService.getData(DB_NAME)
+        const spends = await dbService.getData(DB_NAME)
         store.dispatch({
-            type: SET_INCOMES,
-            incomes
+            type: SET_SPENDS,
+            spends
         })
 
     } catch (err) {
@@ -26,21 +42,6 @@ export async function loadIncomes() {
     }
 
 }
-
-export function getActionAddIncome(income) {
-    return {
-        type: ADD_INCOME,
-        income
-    }
-}
-
-export function getActionUpdateStory(story) {
-    return {
-        type: UPDATE_INCOME,
-        story
-    }
-}
-
 
 // export async function removeStory(incomeId) {
 //     try {
@@ -52,14 +53,14 @@ export function getActionUpdateStory(story) {
 //     }
 // }
 
-export async function addIncome(income) {
+export async function addSpend(spend) {
     try {
-        const savedIncome = await dbService.addData(DB_NAME, income)
-        console.log('Added income', savedIncome)
-        store.dispatch(getActionAddIncome(savedIncome))
-        return savedIncome
+        const savedSpend = await dbService.addData(DB_NAME, spend)
+        console.log('Added spend', savedSpend)
+        store.dispatch(getActionAddSpend(savedSpend))
+        return savedSpend
     } catch (err) {
-        console.log('Cannot add story', err)
+        console.log('Cannot add spend', err)
         throw err
     }
 }

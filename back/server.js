@@ -2,7 +2,7 @@ const express = require('express')
 const cors = require('cors');
 const path = require('path');
 const bodyParser = require('body-parser');
-const { getCollection, updateCollection } = require('./db.service1');
+const walletService = require('./wallet.service');
 
 
 const port = process.env.PORT || 5000;
@@ -30,9 +30,7 @@ app.get('/', function (req, res) {
 });
 
 app.get('/api/get-data', (req, res) => {
-  console.log(req.query)
-  console.log(req.query.dbName)
-  getCollection(req.query.dbName)
+  walletService.getData(req.query.dbName)
     .then((data) => {
       console.log(data, 'app-console Количество монет')
       res.send(data)
@@ -44,18 +42,44 @@ app.get('/api/get-data', (req, res) => {
 })
 
 
-app.get('/api/update-data', (req, res) => {
-  console.log(Date.now(), 'ЗАПРОС ПОЛУЧЕН')
-  console.log(req.params, 'REQ')
-  orderService.openOrder(req.query.wallet, 'Sell')
+app.get('/api/add-data', (req, res) => {
+  const params = req.query
+  console.log(params)
+  walletService.add(params.dbName, params.data)
     .then((data) => {
-      console.log(Date.now(), 'ОТВЕТ ОТПРАВЛЯЕТСЯ')
       console.log(data, 'app-console Количество монет')
       res.send(data)
     })
     .catch(err => {
       console.log('Error:', err)
-      res.status(400).send('Cannot get data')
+      res.status(400).send('Cannot add data')
+    })
+})
+
+app.get('/api/update-data', (req, res) => {
+  const params = req.query
+  console.log(params)
+  walletService.update(params.dbName, params.data)
+    .then((data) => {
+      console.log(data, 'app-console Количество монет')
+      res.send(data)
+    })
+    .catch(err => {
+      console.log('Error:', err)
+      res.status(400).send('Cannot add data')
+    })
+})
+app.get('/api/remove-data', (req, res) => {
+  const params = req.query
+  console.log(params)
+  walletService.remove(params.dbName, params.data)
+    .then((data) => {
+      console.log(data, 'app-console Количество монет')
+      res.send(data)
+    })
+    .catch(err => {
+      console.log('Error:', err)
+      res.status(400).send('Cannot add data')
     })
 })
 

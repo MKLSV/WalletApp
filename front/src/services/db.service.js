@@ -2,6 +2,7 @@ import axios from 'axios';
 
 export const dbService = {
   getData,
+  addData,
   updateData,
 };
 const BASE_URL = process.env.NODE_ENV === 'production'
@@ -11,12 +12,18 @@ const BASE_URL = process.env.NODE_ENV === 'production'
 
 async function getData(dbName) {
   try {
-    console.log('h2ere')
-
     const apiUrl = BASE_URL + 'get-data'
-    console.log(apiUrl)
     const response = await axios.get(apiUrl, { params: {dbName} });
-    console.log(response.data)
+    return response.data
+  } catch (error) {
+    console.error('Error fetching candle data:', error);
+  }
+}
+
+async function addData(dbName, data) {
+  try {
+    const apiUrl = BASE_URL + 'add-data'
+    const response = await axios.get(apiUrl, { params: {dbName, data} });
     return response.data
   } catch (error) {
     console.error('Error fetching candle data:', error);

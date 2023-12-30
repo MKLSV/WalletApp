@@ -1,70 +1,74 @@
 import { useEffect, useState } from "react";
-import { PieChart } from "../components/PieChart";
-import { NavLink, useNavigate } from "react-router-dom";
-import { storageService } from "../services/storage.service";
-import { Loader } from "../components/Loader";
+import { useSelector } from 'react-redux'
+import { NavLink } from "react-router-dom";
 
+import { loadIncomes } from "../store/incomes.actions.js"
+
+import { PieChart } from "../components/PieChart";
+import { Loader } from "../components/Loader";
+import { AddModal } from "../components/addModal.jsx";
+import { loadSpends } from "../store/spends.actions.js";
 
 export function HomeView() {
-  const [wallet, setWallet] = useState(0)
-  const [incomesCount, setIncomesCount] = useState(0)
-  const [spendsCount, setSpandsCount] = useState(0)
+  const [wallet, setWallet] = useState({ wallet: 0, spendsCount: 0, incomesCount: 0 })
+  const [showModal, setShowModal] = useState(null)
   const [loader, setLoader] = useState(true)
 
+  const incomes = useSelector(storeState => storeState.incomesModule.incomes)
+  const spends = useSelector(storeState => storeState.spendsModule.spends)
 
-  const spendKEY = 'SPENDS_DB'
-  const incomeKEY = 'INCOMES_DB'
-
+  console.log(incomes)
   useEffect(() => {
-    storageService.query(spendKEY).then((spends) => {
-      const spendsWallet = spends.reduce((total, spend) => total + parseInt(spend.enlisted), 0);
-      setSpandsCount(parseInt(spendsWallet))
-    })
-    storageService.query(incomeKEY).then((incomes) => {
-      const incomesWallet = incomes.reduce((total, income) => total + parseInt(income.price), 0);
-      setIncomesCount(parseInt(incomesWallet))
+    if (incomes.length && spends.length) return
+    const fetchData = async () => {
+      await loadIncomes()
+      await loadSpends()
       setLoader(false)
-    })
+    }
+    fetchData()
   }, [])
-  console.log(incomesCount)
-  console.log(spendsCount)
+
+
   useEffect(() => {
-    setWallet(incomesCount - spendsCount)
-  }, [incomesCount, spendsCount])
+    const incomesWallet = incomes.reduce((total, income) => total + parseInt(income.price), 0);
+    const spendsWallet = spends.reduce((total, spend) => total + parseInt(spend.price), 0);
+    setWallet({ wallet: incomesWallet - spendsWallet, spendsCount: spendsWallet, incomesCount: incomesWallet })
+  }, [incomes, spends])
 
   function calculateProcent(type) {
     if (type === 'income') {
-      if(incomesCount === 0) return '0wv' 
-      return((((incomesCount + spendsCount) / incomesCount) * 100) + "%")
+      if (wallet.incomesCount === 0) return '0%'
+      return ((((wallet.incomesCount + wallet.spendsCount) / wallet.spendsCount) * 100) + "%")
     }
-    else{
-      if(spendsCount === 0) return '0%' 
-      return((((incomesCount + spendsCount) / spendsCount) * 100) + "%")
+    else {
+      if (wallet.spendsCount === 0) return '0%'
+      return ((((wallet.incomesCount + wallet.spendsCount) / wallet.incomesCount) * 100) + "%")
     }
   }
+
 
   return (
     <div className="home-view">
       {loader ? <Loader /> : ''}
+      {showModal ? <AddModal setLoader={setLoader} setShowModal={setShowModal} showModal={showModal} /> : ''}
       <div className="app-header">
-        <NavLink className='incomes' to='/'>Доходы</NavLink>
+        <NavLink className='incomes' to='/incomes'>Доходы</NavLink>
         <NavLink className='spends' to='/'>Расходы</NavLink>
       </div>
-      <PieChart incomesCount={incomesCount} spendsCount={spendsCount} />
+      <PieChart incomesCount={wallet.incomesCount} spendsCount={wallet.spendsCount} />
       <div className="wallet-container">
         <span>Кошелек</span>
         <div className="wallet">
-          <button className="add-income">+</button>
-          <span>{wallet} P</span>
-          <button className="add-spend">+</button>
+          <button className="add-income" onClick={() => (setShowModal('income'))}>+</button>
+          <span>{wallet.wallet} P</span>
+          <button className="add-spend" onClick={() => (setShowModal('spend'))}>+</button>
         </div>
         <div className="wallet-bar">
-          <div className="income-bar" ></div>
-          {/* <div className="income-bar" style={{ width: calculateProcent('income') }}></div> */}
-          <div className="middle-bar">
-          </div>
-          <div className="spend-bar" ></div>
-          {/* <div className="spend-bar" style={{ width: calculateProcent('spend') }}></div> */}
+          {/* <div className="income-bar" ></div> */}
+          <div className="income-bar" style={{ width: calculateProcent('income') }}></div>
+          <div className="middle-bar"></div>
+          {/* <div className="spend-bar" ></div> */}
+          <div className="spend-bar" style={{ width: calculateProcent('spend') }}></div>
         </div>
       </div>
     </div>

@@ -1,11 +1,11 @@
 import { createStore, combineReducers } from 'redux'
 
 import { incomesReducer } from './incomes.reducer.js'
-// import { userReducer } from './user.reducer.js'
+import { spendsReducer } from './spends.reducer.js'
 
 const rootReducer = combineReducers({
     incomesModule: incomesReducer,
-    // spendsModule: userReducer,    
+    spendsModule: spendsReducer,    
 })
 
 

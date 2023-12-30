@@ -1,14 +1,15 @@
 const MongoClient = require('mongodb').MongoClient
 
-const dbURL = "mongodb+srv://dbuser:komavi96@atlascluster.jwdfb7r.mongodb.net/?retryWrites=true&w=majority"; 
-const dbName = "OrderaInfo25"
+const dbURL = "mongodb+srv://kolosovmatveymk:ASTUtQ85joRxu3Mt@walletcluster.ib8jcxh.mongodb.net/?retryWrites=true&w=majority";
+const dbName = "WalletDB"
 
 
 module.exports = {
-    getCollection
+    getCollection,
 }
 
 var dbConn = null
+
 
 async function getCollection(collectionName) {
     try {
@@ -24,7 +25,7 @@ async function getCollection(collectionName) {
 async function connect() {
     if (dbConn) return dbConn
     try {
-        const client = await MongoClient.connect(dbURL, { useNewUrlParser: true, useUnifiedTopology: true })
+        const client = await MongoClient.connect(dbURL)
         const db = client.db(dbName)
         dbConn = db
         return db
@@ -33,7 +34,4 @@ async function connect() {
         throw err
     }
 }
-
-
-getCollection('Limit25')
 
