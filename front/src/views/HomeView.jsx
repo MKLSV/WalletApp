@@ -19,7 +19,10 @@ export function HomeView() {
 
   console.log(incomes)
   useEffect(() => {
-    if (incomes.length && spends.length) return
+    if (incomes.length && spends.length){
+      setLoader(false)
+      return
+    } 
     const fetchData = async () => {
       await loadIncomes()
       await loadSpends()
@@ -53,7 +56,7 @@ export function HomeView() {
       {showModal ? <AddModal setLoader={setLoader} setShowModal={setShowModal} showModal={showModal} /> : ''}
       <div className="app-header">
         <NavLink className='incomes' to='/incomes'>Доходы</NavLink>
-        <NavLink className='spends' to='/'>Расходы</NavLink>
+        <NavLink className='spends' to='/spends'>Расходы</NavLink>
       </div>
       <PieChart incomesCount={wallet.incomesCount} spendsCount={wallet.spendsCount} />
       <div className="wallet-container">

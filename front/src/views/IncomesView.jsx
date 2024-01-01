@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
-// import { SelectedIncomeModal } from "../components/SelectedIncomeModal";
-import { Loader } from "../components/Loader";
 import { useSelector } from "react-redux";
 import { loadIncomes } from "../store/incomes.actions";
+import { NavLink } from "react-router-dom";
+
+import { IoArrowBackOutline } from "react-icons/io5";
+import { Loader } from "../components/Loader";
+// import { SelectedModal } from "../components/SelectedModal";
 
 export function IncomesView() {
     const [incomeWallet, setIncomeWallet] = useState(0)
@@ -15,10 +18,10 @@ export function IncomesView() {
     console.log(incomes.length)
 
     useEffect(() => {
-        if (incomes.length){
+        if (incomes.length) {
             setLoader(false)
             return
-        } 
+        }
         const fetchData = async () => {
             await loadIncomes()
             setLoader(false)
@@ -38,13 +41,17 @@ export function IncomesView() {
 
 
     return (
-        <div className="income">
+        <div className="list-container">
             {loader ? <Loader /> : ''}
-            {/* {selectedIncome ? <SelectedIncomeModal setLoader={setLoader} list={incomeList} setList={setIncomeList} selectedIncome={selectedIncome} setSelectedIncome={setSelectedIncome} /> : ''} */}
-            <div className="wallet">
-                <span>Доходы: </span>
-                <span>{incomeWallet}</span>
-                <span>p</span>
+            {/* {selectedIncome ? <SelectedModal setLoader={setLoader} selectedItem={selectedIncome} setSelectedItem={setSelectedIncome} type={'income'} /> : ''} */}
+            <div className="header">
+                <div className="title">
+                    <NavLink className='back' to='/'><IoArrowBackOutline /></NavLink>
+                </div>
+                <div className="wallet">
+                    <span>Доходы: </span>
+                    <span>{incomeWallet} P</span>
+                </div>
             </div>
             {incomes && incomes.length ?
                 <div className="list-group" >
