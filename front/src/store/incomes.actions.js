@@ -1,16 +1,18 @@
 
 import { store } from './store.js'
 import { dbService } from "../services/db.service.js";
-import { ADD_INCOME, SET_INCOMES, UPDATE_INCOME } from './incomes.reducer.js';
+import { ADD_INCOME, SET_INCOMES, UPDATE_INCOME, REMOVE_INCOME } from './incomes.reducer.js';
 
 // Action Creators:SET_STORIES
-// export function getActionRemoveStory(storyId) {
-//     return {
-//         type: REMOVE_INCOME,
-//         storyId
-//     }
-// }
 const DB_NAME = 'Incomes'
+
+
+export function getActionRemove(incomeID) {
+    return {
+        type: REMOVE_INCOME,
+        incomeID
+    }
+}
 
 export async function loadIncomes() {
     try {
@@ -34,23 +36,23 @@ export function getActionAddIncome(income) {
     }
 }
 
-export function getActionUpdateStory(story) {
+export function getActionUpdate(income) {
     return {
         type: UPDATE_INCOME,
-        story
+        income
     }
 }
 
 
-// export async function removeStory(incomeId) {
-//     try {
-//         await dbService.remove(incomeId, 'Incomes')
-//         store.dispatch(getActionRemoveStory(incomeId))
-//     } catch (err) {
-//         console.log('Cannot remove story', err)
-//         throw err
-//     }
-// }
+export async function removeIncome(incomeId) {
+    try {
+        await dbService.removeData(incomeId, DB_NAME)
+        store.dispatch(getActionRemove(incomeId))
+    } catch (err) {
+        console.log('Cannot remove story', err)
+        throw err
+    }
+}
 
 export async function addIncome(income) {
     try {
@@ -64,16 +66,14 @@ export async function addIncome(income) {
     }
 }
 
-export function updateStory(story) {
-    // return storyService.save(story)
-    //     .then(savedStory => {
-    //         console.log('Updated Story:', savedStory)
-    //         store.dispatch(getActionUpdateStory(savedStory))
-    //         return savedStory
-    //     })
-    //     .catch(err => {
-    //         console.log('Cannot save story', err)
-    //         throw err
-    //     })
+export async function updateIncome(income) {
+    try {
+        await dbService.updateData(income, DB_NAME)
+        console.log('Updated Story:', income)
+        store.dispatch(getActionUpdate(income))
+    } catch (err) {
+        console.log('Cannot add story', err)
+        throw err
+    }
 }
 

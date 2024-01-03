@@ -1,45 +1,40 @@
 import { useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { FaCheck } from "react-icons/fa";
-import { utilService } from "../services/util.service";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { FaRegEdit } from "react-icons/fa";
-import { storageService } from "../services/async-storage.service";
+import { removeIncome, updateIncome } from "../store/incomes.actions";
 
-export function SelectedIncomeModal({ setLoader, setList, list, setSelectedIncome, selectedIncome }) {
+export function SelectedIncomeModal({ setLoader, selectedIncome, setSelectedIncome }) {
 
     const [deleteModal, setDeleteModal] = useState(false)
     const [editItem, setEditItem] = useState(false)
     const [editedItem, setEditedItem] = useState({ ...selectedIncome })
-    const incomeKEY = 'INCOMES_DB'
+
+    
     function onEdit() {
         if (deleteModal) return
         setEditItem(true)
     }
+
     function handleChange(event) {
         console.log(event.target.id)
         const name = event.target.id
         const value = event.target.value
         setEditedItem((prev) => ({ ...prev, [name]: value }))
     }
+
     async function saveChanges() {
         setEditItem(false)
         setLoader(true)
-        await storageService.put(incomeKEY,editedItem)
-        let newList = list
-        const idx = newList.findIndex(item => item.id === selectedIncome.id)
-        newList.splice(idx, 1, editedItem)
-        setList(newList)
+        await updateIncome(editedItem)
         setLoader(false)
         setSelectedIncome(null)
     }
+
     async function deleteIncome() {
         setLoader(true)
-        await storageService.remove(incomeKEY,selectedIncome.id)
-        let newList = list
-        const idx = newList.findIndex(item => item.id === selectedIncome.id)
-        newList.splice(idx, 1)
-        setList(newList)
+        await removeIncome(selectedIncome._id)
         setLoader(false)
         setSelectedIncome(null)
     }
@@ -74,8 +69,8 @@ export function SelectedIncomeModal({ setLoader, setList, list, setSelectedIncom
                 </div>
                 {editItem ?
                     <div className="btns">
-                        <FaCheck className="set" style={{ color: 'green', }} onClick={saveChanges} />
-                        <IoClose className="unset" style={{ color: 'red', fontSize: '35px' }} onClick={() => setEditItem(false)} />
+                        <FaCheck className="set" style={{ color: 'green' }} onClick={saveChanges} />
+                        <IoClose className="unset" style={{ color: 'red' }} onClick={() => setEditItem(false)} />
                     </div>
                     :
                     <div className={deleteModal ? "btns disabled" : "btns"}>

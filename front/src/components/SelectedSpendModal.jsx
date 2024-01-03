@@ -1,19 +1,19 @@
 import { useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { FaCheck } from "react-icons/fa";
-import { utilService } from "../services/util.service";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { FaRegEdit } from "react-icons/fa";
-import { storageService } from "../services/async-storage.service";
+import { removeSpend, updateSpend } from "../store/spends.actions";
 
-export function SelectedSpendModal({ setLoader, setList, list, setSelectedSpend, selectedSpend }) {
+export function SelectedSpendModal({ setLoader, setSelectedSpend, selectedSpend }) {
 
     const [deleteModal, setDeleteModal] = useState(false)
     const [editItem, setEditItem] = useState(false)
     const [onAddEnlisted, setOnAddEnliste] = useState(false)
     const [editedItem, setEditedItem] = useState({ ...selectedSpend })
     const [newEnliste, setNewEnliste] = useState(null)
-    const spendKEY = 'SPENDS_DB'
+
+
     function onEdit() {
         if (deleteModal) return
         setEditItem(true)
@@ -34,35 +34,21 @@ export function SelectedSpendModal({ setLoader, setList, list, setSelectedSpend,
     async function saveChanges() {
         setEditItem(false)
         setLoader(true)
-        await storageService.put(spendKEY, editedItem)
-        let newList = list
-        const idx = newList.findIndex(item => item.id === selectedSpend.id)
-        newList.splice(idx, 1, editedItem)
-        setList(newList)
+        await updateSpend(editedItem)
         setLoader(false)
         setSelectedSpend(null)
     }
     async function deleteIncome() {
         setLoader(true)
-        await storageService.remove(spendKEY, selectedSpend.id)
-        let newList = list
-        const idx = newList.findIndex(item => item.id === selectedSpend.id)
-        newList.splice(idx, 1)
-        setList(newList)
+        await removeSpend(selectedSpend._id)
         setLoader(false)
         setSelectedSpend(null)
     }
 
     async function addNewEnliste() {
-        setLoader(true)
         const newEditedItem = { ...editedItem, enlisted: editedItem.enlisted + newEnliste, price: parseInt(editedItem.price) - newEnliste }
         setEditedItem(newEditedItem)
-        await storageService.put(spendKEY, editedItem)
-        let newList = list
-        const idx = newList.findIndex(item => item.id === selectedSpend.id)
-        newList.splice(idx, 1, newEditedItem)
-        setList(newList)
-        setLoader(false)
+        saveChanges()
     }
 
     return (
@@ -112,8 +98,8 @@ export function SelectedSpendModal({ setLoader, setList, list, setSelectedSpend,
                 }
                 {editItem ?
                     <div className="btns">
-                        <FaCheck className="set" style={{ color: 'green', }} onClick={saveChanges} />
-                        <IoClose className="unset" style={{ color: 'red', fontSize: '35px' }} onClick={() => setEditItem(false)} />
+                        <FaCheck className="set" style={{ color: 'green' }} onClick={saveChanges} />
+                        <IoClose className="unset" style={{ color: 'red' }} onClick={() => setEditItem(false)} />
                     </div>
                     :
                     <div className={deleteModal ? "btns disabled" : "btns"}>

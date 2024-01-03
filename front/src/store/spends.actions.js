@@ -1,15 +1,17 @@
 
 import { store } from './store.js'
 import { dbService } from "../services/db.service.js";
-import { ADD_SPEND, SET_SPENDS } from './spends.reducer.js';
+import { ADD_SPEND, REMOVE_SPEND, SET_SPENDS, UPDATE_SPEND } from './spends.reducer.js';
 
-// Action Creators:SET_STORIES
-// export function getActionRemoveStory(storyId) {
-//     return {
-//         type: REMOVE_INCOME,
-//         storyId
-//     }
-// }
+const DB_NAME = 'Spends'
+
+
+export function getActionRemoveSpend(spendID) {
+    return {
+        type: REMOVE_SPEND,
+        spendID
+    }
+}
 
 export function getActionAddSpend(spend) {
     return {
@@ -19,14 +21,13 @@ export function getActionAddSpend(spend) {
 }
 
 
-const DB_NAME = 'Spends'
 
-// export function getActionUpdateStory(story) {
-//     return {
-//         type: UPDATE_INCOME,
-//         story
-//     }
-// }
+export function getActionUpdateSpend(spend) {
+    return {
+        type: UPDATE_SPEND,
+        spend
+    }
+}
 
 export async function loadSpends() {
     try {
@@ -43,15 +44,15 @@ export async function loadSpends() {
 
 }
 
-// export async function removeStory(incomeId) {
-//     try {
-//         await dbService.remove(incomeId, 'Incomes')
-//         store.dispatch(getActionRemoveStory(incomeId))
-//     } catch (err) {
-//         console.log('Cannot remove story', err)
-//         throw err
-//     }
-// }
+export async function removeSpend(spendID) {
+    try {
+        await dbService.removeData(spendID, DB_NAME)
+        store.dispatch(getActionRemoveSpend(spendID))
+    } catch (err) {
+        console.log('Cannot remove story', err)
+        throw err
+    }
+}
 
 export async function addSpend(spend) {
     try {
@@ -65,16 +66,14 @@ export async function addSpend(spend) {
     }
 }
 
-export function updateStory(story) {
-    // return storyService.save(story)
-    //     .then(savedStory => {
-    //         console.log('Updated Story:', savedStory)
-    //         store.dispatch(getActionUpdateStory(savedStory))
-    //         return savedStory
-    //     })
-    //     .catch(err => {
-    //         console.log('Cannot save story', err)
-    //         throw err
-    //     })
+export async function updateSpend(spend) {
+    try {
+        await dbService.updateData(spend, DB_NAME)
+        console.log('Updated Story:', spend)
+        store.dispatch(getActionUpdateSpend(spend))
+    } catch (err) {
+        console.log('Cannot add story', err)
+        throw err
+    }
 }
 

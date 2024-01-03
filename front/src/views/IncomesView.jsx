@@ -5,7 +5,7 @@ import { NavLink } from "react-router-dom";
 
 import { IoArrowBackOutline } from "react-icons/io5";
 import { Loader } from "../components/Loader";
-// import { SelectedModal } from "../components/SelectedModal";
+import { SelectedIncomeModal } from "../components/SelectedIncomeModal";
 
 export function IncomesView() {
     const [incomeWallet, setIncomeWallet] = useState(0)
@@ -35,7 +35,7 @@ export function IncomesView() {
     }, [incomes])
 
     function onSelectedIncome(id) {
-        const selected = incomes.find(item => item.id === id)
+        const selected = incomes.find(item => item._id === id)
         setSelectedIncome(selected)
     }
 
@@ -43,7 +43,7 @@ export function IncomesView() {
     return (
         <div className="list-container">
             {loader ? <Loader /> : ''}
-            {/* {selectedIncome ? <SelectedModal setLoader={setLoader} selectedItem={selectedIncome} setSelectedItem={setSelectedIncome} type={'income'} /> : ''} */}
+            {selectedIncome ? <SelectedIncomeModal setLoader={setLoader} selectedIncome={selectedIncome} setSelectedIncome={setSelectedIncome} /> : ''}
             <div className="header">
                 <div className="title">
                     <NavLink className='back' to='/'><IoArrowBackOutline /></NavLink>
@@ -56,7 +56,7 @@ export function IncomesView() {
             {incomes && incomes.length ?
                 <div className="list-group" >
                     {incomes.map((item, index) => (
-                        <div className="list-item" key={index} onClick={() => onSelectedIncome(item.id)}>
+                        <div className="list-item" key={index} onClick={() => onSelectedIncome(item._id)}>
                             <span className="item">{item.title}</span>
                             <span className="item">{item.price}p</span>
                         </div>

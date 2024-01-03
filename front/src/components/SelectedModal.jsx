@@ -3,6 +3,7 @@ import { IoClose } from "react-icons/io5";
 import { FaCheck } from "react-icons/fa";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { FaRegEdit } from "react-icons/fa";
+import { removeIncome } from "../store/incomes.actions";
 
 export function SelectedModal({ setLoader, selectedItem, setSelectedItem, type }) {
 
@@ -43,6 +44,7 @@ export function SelectedModal({ setLoader, selectedItem, setSelectedItem, type }
 
     async function deleteIncome() {
         setLoader(true)
+        await removeIncome(selectedItem.id)
         await storageService.remove(spendKEY, selectedItem.id)
         let newList = list
         const idx = newList.findIndex(item => item.id === selectedItem.id)

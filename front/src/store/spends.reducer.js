@@ -1,7 +1,7 @@
 export const SET_SPENDS = 'SET_SPENDS'
 export const UPDATE_SPEND = 'UPDATE_SPEND'
 export const ADD_SPEND = 'ADD_SPEND'
-// export const REMOVE_INCOME = 'REMOVE_INCOME'
+export const REMOVE_SPEND = 'REMOVE_SPEND'
 
 
 const initialState = {
@@ -22,10 +22,10 @@ export function spendsReducer(state = initialState, action) {
         case ADD_SPEND:
             newState = { ...state, spends: [...state.spends, action.spend] }
             break
-        // case REMOVE_INCOME:
-        //     incomes = state.incomes.filter(income => income._id !== action.incomeId)
-        //     newState = { ...state, incomes }
-        //     break
+        case REMOVE_SPEND:
+            spends = state.spends.filter(spend => spend._id !== action.spendId)
+            newState = { ...state, spends }
+            break
         default:
     }
     return newState

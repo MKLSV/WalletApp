@@ -72,7 +72,7 @@ app.get('/api/update-data', (req, res) => {
 app.get('/api/remove-data', (req, res) => {
   const params = req.query
   console.log(params)
-  walletService.remove(params.dbName, params.data)
+  walletService.remove(params.dbName, params.id)
     .then((data) => {
       console.log(data, 'app-console Количество монет')
       res.send(data)

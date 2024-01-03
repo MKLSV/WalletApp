@@ -5,7 +5,7 @@ import { loadSpends } from "../store/spends.actions";
 import { NavLink } from "react-router-dom";
 
 import { IoArrowBackOutline } from "react-icons/io5";
-// import { SelectedSpendModal } from "../components/SelectedSpendModal";
+import { SelectedSpendModal } from "../components/SelectedSpendModal";
 
 export function SpendsView() {
     const [spendWallet, setSpendWallet] = useState(0)
@@ -39,7 +39,7 @@ export function SpendsView() {
 
 
     function onSelectedSpend(id) {
-        const selected = spends.find(item => item.id === id)
+        const selected = spends.find(item => item._id === id)
         console.log(selected)
         setSelectedSpend(selected)
     }
@@ -48,7 +48,7 @@ export function SpendsView() {
     return (
         <div className="list-container">
             {loader ? <Loader /> : ''}
-            {/* {selectedSpend ? <SelectedSpendModal setLoader={setLoader} list={spendsList} setList={setSpendsList} selectedSpend={selectedSpend} setSelectedSpend={setSelectedSpend} /> : ''}  */}
+            {selectedSpend ? <SelectedSpendModal setLoader={setLoader} selectedSpend={selectedSpend} setSelectedSpend={setSelectedSpend} /> : ''} 
             <div className="header spend">
                 <div className="title">
                     <NavLink className='back' to='/'><IoArrowBackOutline /></NavLink>
@@ -67,7 +67,7 @@ export function SpendsView() {
             {spends && spends.length ?
                 <div className="list-group" >
                     {spends.map((item, index) => (
-                        <div className="list-item" key={index} onClick={() => onSelectedSpend(item.id)}>
+                        <div className="list-item" key={index} onClick={() => onSelectedSpend(item._id)}>
                             <span className="item">{item.title}</span>
                             <span className="item">{item.price}p</span>
                         </div>

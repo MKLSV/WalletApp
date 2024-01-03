@@ -43,8 +43,8 @@ async function update(DB_NAME, data) {
         const updatedData = { ...data }
         delete updatedData._id
         const collection = await dbService.getCollection(DB_NAME)
-        await collection.updateOne({ _id: ObjectId(data._id || req.params.id) }, { $set: updatedData })
-        return story
+        await collection.updateOne({ _id: new ObjectId(data._id || req.params.id) }, { $set: updatedData })
+        return data
     } catch (err) {
         console.error(`cannot update story ${data._id}`, err)
         throw err
@@ -55,7 +55,7 @@ async function update(DB_NAME, data) {
 async function remove(DB_NAME, dataID) {
     try {
         const collection = await dbService.getCollection(DB_NAME)
-        await collection.deleteOne({ _id: ObjectId(dataID || req.params.id) })
+        await collection.deleteOne({ _id: new ObjectId(dataID || req.params.id) })
         return dataID
     } catch (err) {
         console.error(`cannot remove story ${dataID}`, err)

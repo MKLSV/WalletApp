@@ -2,7 +2,7 @@
   position: absolute;
   left: 0;
   top: 0;
-  height: 100vh;
+  height: 100dvh;
   width: 100vw;
   background-color: #373737b8;
   z-index: 100;
@@ -54,7 +54,7 @@
       display: flex;
       justify-content: space-around;
       width: 100%;
-      font-size: 60px;
+      font-size: 1.5em;
       transition: 0.3s;
       align-items: center;
       &.disabled {
