@@ -59,7 +59,7 @@ export function HomeView() {
         <NavLink className='incomes' to='/incomes'>Доходы</NavLink>
         <NavLink className='spends' to='/spends'>Расходы</NavLink>
       </div>
-      <PieChart incomesCount={wallet.incomesCount} spendsCount={wallet.spendsCount} />
+      <PieChart incomesCount={wallet.incomesCount} spendsCount={wallet.enlistedWallet} />
       <div className="wallet-container">
         <span>Кошелек</span>
         <div className="wallet">
