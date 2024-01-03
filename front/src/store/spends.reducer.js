@@ -16,7 +16,7 @@ export function spendsReducer(state = initialState, action) {
             newState = { ...state, spends: action.spends }
             break
         case UPDATE_SPEND:
-            spends = state.incomes.map(spend => (spend._id === action.spend._id) ? action.spend : spend)
+            spends = state.spends.map(spend => (spend._id === action.spend._id) ? action.spend : spend)
             newState = { ...state, spends }
             break
         case ADD_SPEND:
