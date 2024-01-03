@@ -35,7 +35,8 @@ export function HomeView() {
   useEffect(() => {
     const incomesWallet = incomes.reduce((total, income) => total + parseInt(income.price), 0);
     const spendsWallet = spends.reduce((total, spend) => total + parseInt(spend.price), 0);
-    setWallet({ wallet: incomesWallet - spendsWallet, spendsCount: spendsWallet, incomesCount: incomesWallet })
+    const enlistedWallet = spends.reduce((total, spend) => total + parseInt(spend.enlisted), 0);
+    setWallet({ wallet: incomesWallet - enlistedWallet, spendsCount: spendsWallet, incomesCount: incomesWallet })
   }, [incomes, spends])
 
   function calculateProcent(type) {
