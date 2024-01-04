@@ -16,41 +16,40 @@ export function SpendsView() {
     const [spendList, setSpendList] = useState(null)
 
     const spends = useSelector(storeState => storeState.spendsModule.spends)
+
     useEffect(() => {
         if (spends.length) {
-            const sortedSpends = spends.sort(function (a, b) {
-                if (a.date === 'Не горит' && b.date !== 'Не горит') {
-                    return 1;
-                } else if (a.date !== 'Не горит' && b.date === 'Не горит') {
-                    return -1;
-                } else {
-                    return new Date(a.date).getTime() - new Date(b.date).getTime();
-                }
-            });
-            console.log(sortedSpends)
-            setSpendList(sortedSpends)
+            getSortedSpends()
             setLoader(false)
             return
         }
         const fetchData = async () => {
             await loadSpends()
-            const sortedSpends = spends.sort(function (a, b) {
-                return new Date(b.date).getTime() - new Date(a.date).getTime();
-            });
-            setSpendList(sortedSpends)
             setLoader(false)
         }
         fetchData()
     }, [])
 
     useEffect(() => {
+        getSortedSpends()
         const newWallet = spends.reduce((total, spend) => total + parseInt(spend.price), 0);
         setSpendWallet(newWallet)
         const newEnlistedWallet = spends.reduce((total, spend) => total + parseInt(spend.enlisted), 0);
         setEnlistedWallet(newEnlistedWallet)
     }, [spends])
 
-
+    function getSortedSpends() {
+        const sortedSpends = spends.sort(function (a, b) {
+            if (a.date === 'Не горит' && b.date !== 'Не горит') {
+                return 1;
+            } else if (a.date !== 'Не горит' && b.date === 'Не горит') {
+                return -1;
+            } else {
+                return new Date(a.date).getTime() - new Date(b.date).getTime();
+            }
+        });
+        setSpendList(sortedSpends)
+    }
 
     function onSelectedSpend(id) {
         const selected = spends.find(item => item._id === id)
