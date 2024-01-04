@@ -31,10 +31,10 @@ export function SelectedSpendModal({ setLoader, setSelectedSpend, selectedSpend 
             setNewEnliste(parseInt(value))
         }
     }
-    async function saveChanges() {
+    async function saveChanges(editedData) {
         setEditItem(false)
-        setLoader(true)
-        await updateSpend(editedItem)
+        setLoader(true) 
+        await updateSpend(editedData)
         setLoader(false)
         setSelectedSpend(null)
     }
@@ -46,9 +46,11 @@ export function SelectedSpendModal({ setLoader, setSelectedSpend, selectedSpend 
     }
 
     async function addNewEnliste() {
-        const newEditedItem = { ...editedItem, enlisted: parseInt(editedItem.price), price: 0 }
+        console.log('hererer')
+        const newEditedItem = { ...editedItem, enlisted: parseInt(editedItem.price), date: 'done' }
+        // console.log(newEditedItem)
         setEditedItem(newEditedItem)
-        saveChanges()
+        saveChanges(newEditedItem)
     }
 
     return (
@@ -63,7 +65,7 @@ export function SelectedSpendModal({ setLoader, setSelectedSpend, selectedSpend 
                     }
                 </div>
                 <div className="item">
-                    <label>Оставшаяся Сумма</label>
+                    <label>Сумма</label>
                     {editItem ?
                         <input type="text" id="price" value={editedItem.price} onChange={(e) => handleChange(e)} />
                         :

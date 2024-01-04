@@ -16,7 +16,7 @@ export function SpendsView() {
     const [spendList, setSpendList] = useState(null)
 
     const spends = useSelector(storeState => storeState.spendsModule.spends)
-
+    console.log(spendList)
     useEffect(() => {
         if (spends.length) {
             getSortedSpends()
@@ -33,22 +33,38 @@ export function SpendsView() {
     useEffect(() => {
         getSortedSpends()
         const newWallet = spends.reduce((total, spend) => total + parseInt(spend.price), 0);
-        setSpendWallet(newWallet)
         const newEnlistedWallet = spends.reduce((total, spend) => total + parseInt(spend.enlisted), 0);
+        setSpendWallet(newWallet - newEnlistedWallet)
         setEnlistedWallet(newEnlistedWallet)
     }, [spends])
 
     function getSortedSpends() {
-        const sortedSpends = spends.sort(function (a, b) {
-            if (a.date === 'Не горит' && b.date !== 'Не горит') {
-                return 1;
-            } else if (a.date !== 'Не горит' && b.date === 'Не горит') {
-                return -1;
-            } else {
-                return new Date(a.date).getTime() - new Date(b.date).getTime();
-            }
+        let highPriority = []
+        let mediumPriority = []
+        let lowPriority = []
+        let noPriority = []
+        let done = []
+        let check
+        
+        spends.map((item) => {
+            check = checkPriority(item.date)
+            if (check === 'high') highPriority.push(item)
+            if (check === 'medium') mediumPriority.push(item)
+            if (check === 'low') lowPriority.push(item)
+            if (check === 'no') noPriority.push(item)
+            if (check === 'done') done.push(item)
+        })
+        highPriority.sort(function (a, b) {
+            return new Date(a.date).getTime() - new Date(b.date).getTime();
         });
-        setSpendList(sortedSpends)
+        mediumPriority.sort(function (a, b) {
+            return new Date(a.date).getTime() - new Date(b.date).getTime();
+        });
+        lowPriority.sort(function (a, b) {
+            return new Date(a.date).getTime() - new Date(b.date).getTime();
+        });
+
+        setSpendList({ high: highPriority, medium: mediumPriority, low: lowPriority, done: done, no: noPriority })
     }
 
     function onSelectedSpend(id) {
@@ -59,10 +75,12 @@ export function SpendsView() {
 
     function checkPriority(date) {
         const diff = new Date(date).getTime() - Date.now()
-        if (diff < 604800000) return 'list-item high'
-        if (diff < 604800000 * 2) return 'list-item medium'
-        if (date === 'Не горит') return 'list-item'
-        return 'list-item low'
+        // console.log(date)
+        if (diff < 604800000) return 'high'
+        if (diff < 604800000 * 2) return 'medium'
+        if (date === 'Не горит') return 'no'
+        if (date === 'done') return 'done'
+        return 'low'
     }
 
 
@@ -85,21 +103,55 @@ export function SpendsView() {
                     </section>
                 </div>
             </div>
-            {spendList && spendList.length ?
+            {spendList !== null ?
                 <div className="list-group" >
-                    {spendList.map((item, index) => (
-                        <div className={checkPriority(item.date)} key={index} onClick={() => onSelectedSpend(item._id)}>
+                    {spendList.high.length > 0 && 
+                    <span className="list-title high">Высокий приоритет</span>
+                    }
+                    {spendList.high.map((item, index) => (
+                        <div className='list-item' key={index} onClick={() => onSelectedSpend(item._id)}>
                             <span className="item">{item.title}</span>
                             <span className="item">{item.price}p</span>
                         </div>
                     ))}
-                    {/* <button onClick={() => setShowModal(true)}>Добавить</button> */}
+                    {spendList.medium.length > 0 && 
+                    <span className="list-title medium">Средний приоритет</span>
+                    }
+                    {spendList.medium.map((item, index) => (
+                        <div className='list-item' key={index} onClick={() => onSelectedSpend(item._id)}>
+                            <span className="item">{item.title}</span>
+                            <span className="item">{item.price}p</span>
+                        </div>
+                    ))}
+                    {spendList.low.length > 0 && 
+                    <span className="list-title low">Терпит</span>
+                    }
+                    {spendList.low.map((item, index) => (
+                        <div className='list-item' key={index} onClick={() => onSelectedSpend(item._id)}>
+                            <span className="item">{item.title}</span>
+                            <span className="item">{item.price}p</span>
+                        </div>
+                    ))}
+                    {spendList.no.length > 0 && 
+                    <span className="list-title no">Вообще не горит</span>
+                    }
+                    {spendList.no.map((item, index) => (
+                        <div className='list-item' key={index} onClick={() => onSelectedSpend(item._id)}>
+                            <span className="item">{item.title}</span>
+                            <span className="item">{item.price}p</span>
+                        </div>
+                    ))}
+                    {spendList.done.length > 0 && 
+                    <span className="list-title done">Уже оплаченно</span>
+                    }
+                    {spendList.done.map((item, index) => (
+                        <div className='list-item done' key={index} onClick={() => onSelectedSpend(item._id)}>
+                            <span className="item">{item.title}</span>
+                            <span className="item">{item.price}p</span>
+                        </div>
+                    ))}
                 </div>
-                :
-                <div className="add-btn" onClick={() => setShowModal(true)}>
-                    <span>+</span>
-                </div>
-            }
+                : ''}
         </div>
     )
 }
