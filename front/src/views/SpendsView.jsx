@@ -13,17 +13,31 @@ export function SpendsView() {
     const [showModal, setShowModal] = useState(false)
     const [selectedSpend, setSelectedSpend] = useState(null)
     const [loader, setLoader] = useState(true)
-
+    const [spendList, setSpendList] = useState(null)
 
     const spends = useSelector(storeState => storeState.spendsModule.spends)
-
     useEffect(() => {
         if (spends.length) {
+            const sortedSpends = spends.sort(function (a, b) {
+                if (a.date === 'Не горит' && b.date !== 'Не горит') {
+                    return 1;
+                } else if (a.date !== 'Не горит' && b.date === 'Не горит') {
+                    return -1;
+                } else {
+                    return new Date(a.date).getTime() - new Date(b.date).getTime();
+                }
+            });
+            console.log(sortedSpends)
+            setSpendList(sortedSpends)
             setLoader(false)
             return
         }
         const fetchData = async () => {
             await loadSpends()
+            const sortedSpends = spends.sort(function (a, b) {
+                return new Date(b.date).getTime() - new Date(a.date).getTime();
+            });
+            setSpendList(sortedSpends)
             setLoader(false)
         }
         fetchData()
@@ -44,11 +58,19 @@ export function SpendsView() {
         setSelectedSpend(selected)
     }
 
+    function checkPriority(date) {
+        const diff = new Date(date).getTime() - Date.now()
+        if (diff < 604800000) return 'list-item high'
+        if (diff < 604800000 * 2) return 'list-item medium'
+        if (date === 'Не горит') return 'list-item'
+        return 'list-item low'
+    }
+
 
     return (
         <div className="list-container">
             {loader ? <Loader /> : ''}
-            {selectedSpend ? <SelectedSpendModal setLoader={setLoader} selectedSpend={selectedSpend} setSelectedSpend={setSelectedSpend} /> : ''} 
+            {selectedSpend ? <SelectedSpendModal setLoader={setLoader} selectedSpend={selectedSpend} setSelectedSpend={setSelectedSpend} /> : ''}
             <div className="header spend">
                 <div className="title">
                     <NavLink className='back' to='/'><IoArrowBackOutline /></NavLink>
@@ -64,10 +86,10 @@ export function SpendsView() {
                     </section>
                 </div>
             </div>
-            {spends && spends.length ?
+            {spendList && spendList.length ?
                 <div className="list-group" >
-                    {spends.map((item, index) => (
-                        <div className="list-item" key={index} onClick={() => onSelectedSpend(item._id)}>
+                    {spendList.map((item, index) => (
+                        <div className={checkPriority(item.date)} key={index} onClick={() => onSelectedSpend(item._id)}>
                             <span className="item">{item.title}</span>
                             <span className="item">{item.price}p</span>
                         </div>

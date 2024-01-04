@@ -9,7 +9,7 @@ export function SelectedSpendModal({ setLoader, setSelectedSpend, selectedSpend 
 
     const [deleteModal, setDeleteModal] = useState(false)
     const [editItem, setEditItem] = useState(false)
-    const [onAddEnlisted, setOnAddEnliste] = useState(false)
+    // const [onAddEnlisted, setOnAddEnliste] = useState(false)
     const [editedItem, setEditedItem] = useState({ ...selectedSpend })
     const [newEnliste, setNewEnliste] = useState(null)
 
@@ -46,7 +46,7 @@ export function SelectedSpendModal({ setLoader, setSelectedSpend, selectedSpend 
     }
 
     async function addNewEnliste() {
-        const newEditedItem = { ...editedItem, enlisted: editedItem.enlisted + newEnliste, price: parseInt(editedItem.price) - newEnliste }
+        const newEditedItem = { ...editedItem, enlisted: parseInt(editedItem.price), price: 0 }
         setEditedItem(newEditedItem)
         saveChanges()
     }
@@ -71,31 +71,21 @@ export function SelectedSpendModal({ setLoader, setSelectedSpend, selectedSpend 
                     }
 
                 </div>
-                <div className="item">
+                {/* <div className="item">
                     <label>Уже зачисленно</label>
                     <span>{editedItem.enlisted}</span>
-
-                </div>
-                {!onAddEnlisted ?
+                </div> */}
                     <div className="item">
                         <label>Число</label>
                         {editItem ?
-                            <input type="text" id="date" value={editedItem.date} onChange={(e) => handleChange(e)} />
+                            <input type="date" id="date" value={editedItem.date} onChange={(e) => handleChange(e)} />
                             :
                             <span>{editedItem.date}</span>
                         }
                     </div>
-                    :
-                    <div className="item">
-                        <label>Зачислить</label>
-                        <input type="number" value={newEnliste} onChange={(e) => handleEnliste(e)} />
-                    </div>
-                }
-                {onAddEnlisted ?
-                    <button className="add-spend-btn" onClick={addNewEnliste}>Внеси</button>
-                    :
-                    <button className="add-spend-btn" onClick={() => setOnAddEnliste(true)}>Внеси Часть</button>
-                }
+                   
+                <button className="add-spend-btn" onClick={addNewEnliste}>Выполнено</button>
+
                 {editItem ?
                     <div className="btns">
                         <FaCheck className="set" style={{ color: 'green' }} onClick={saveChanges} />

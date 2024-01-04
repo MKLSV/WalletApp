@@ -21,7 +21,7 @@ export function AddModal({ setLoader, setShowModal, showModal }) {
                 const data = {
                     title: e.target[0].value,
                     price: e.target[1].value,
-                    date: checked ? utilService.getTodayDate() : e.target[2].value.split('-').join('/')
+                    date: checked ? utilService.getTodayDate() : e.target[2].value
                 }
                 setLoader(true)
                 await addIncome(data)
@@ -37,7 +37,7 @@ export function AddModal({ setLoader, setShowModal, showModal }) {
                     enlisted: 0,
                     title: e.target[0].value,
                     price: e.target[1].value,
-                    date: checked ? 'Не горит' : e.target[2].value.split('-').join('/')
+                    date: checked ? 'Не горит' : e.target[2].value
                 }
                 await addSpend(data)
             }
@@ -72,6 +72,14 @@ export function AddModal({ setLoader, setShowModal, showModal }) {
                     <input type="text" className="form-control" placeholder="Трата" />
                     <span className="input-group-text"></span>
                     <input type="number" className="form-control" placeholder="Сумма" />
+                    {/* <section>
+                        <label htmlFor="priority">Приоритет</label>
+                        <select name="priority" className="priority">
+                            <option value="high" >Высокий</option>
+                            <option value="medium">Средний</option>
+                            <option value="low" selected="selected">Низкий</option>
+                        </select>
+                    </section> */}
                     {!checked ?
                         <input type="date" className="form-control" />
                         :

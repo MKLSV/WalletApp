@@ -66,6 +66,16 @@
             align-items: center;
             cursor: pointer;
 
+            &.high{
+                background-color: rgba(255, 68, 0, 0.7);
+            }
+            &.medium{
+                background-color: rgba(255, 166, 0, 0.7);
+            }
+            &.low{
+                background-color: rgba(255, 255, 0, 0.7);
+            }
+                
             .item{
                 width: 50%;
                 text-align: center;
